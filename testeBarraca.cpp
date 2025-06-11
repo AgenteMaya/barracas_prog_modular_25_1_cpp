@@ -1,4 +1,4 @@
-#include "testeBarraca.h"
+/* #include "testeBarraca.h"
 #include "barraca.h"
 #include <map>
 #include <iostream>
@@ -57,4 +57,4 @@ int main()
 
 int buscaProduto(size_t id, AuxProduto auxProduto){
 
-}
+} */

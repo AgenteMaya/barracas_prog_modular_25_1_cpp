@@ -1,21 +1,46 @@
+/**
+ * @date 08/06/2025
+ */
+
+
+
 #include "barraca.h"
+#include "testeBarraca.h"
+
 #include <map>
 #include <vector>
 #include <utility>
 #include <iostream>
+#include <algorithm>
+
 
 struct barraca{
     std::string nome;
-    size_t horarioInicial;
-    size_t horarioFinal;
+    tm horarioInicial;
+    tm horarioFinal;
     size_t senha;
     size_t id;
-    std::vector<std::pair<size_t, size_t>> lProdutos; //<qtd do Produto, id do produto>
+    std::map<size_t, size_t> lProdutos; //<id do produto, qtdProduto>
 };
 
 typedef struct barraca Barraca;
 
 static std::map<size_t, Barraca> lBarracas;
+
+
+int criaId(){
+    auto itMaior = lBarracas.rend();
+    return itMaior->first + 1;
+};
+
+std::tm criarHorario(int hora, int minuto) {
+    std::tm horario{};
+    horario.tm_hour = hora;
+    horario.tm_min = minuto;
+    horario.tm_isdst = -1;    
+    mktime(&horario); 
+    return horario;
+}
 
 int criaBarraca (auxBarraca infoBarraca)
 {
@@ -43,8 +68,8 @@ int atualizaBarraca (auxBarraca infoBarraca, size_t id)
     } 
 
     resultado->second.nome = infoBarraca.nome;
-    resultado->second.horarioInicial = infoBarraca.horarioInicial;
-    resultado->second.horarioFinal = infoBarraca.horarioFinal;
+    resultado->second.horarioInicial = criarHorario(infoBarraca.horaInicial, infoBarraca.MinutoInicial);
+    resultado->second.horarioFinal = criarHorario(infoBarraca.horaFinal, infoBarraca.MinutoFinal);
 
     return 0;
 }
@@ -65,8 +90,8 @@ int buscaBarraca (int id, auxBarraca& barraca)
     } 
 
     barraca.nome = resultado->second.nome;
-    barraca.horarioInicial = resultado->second.horarioInicial;
-    barraca.horarioFinal = resultado->second.horarioFinal;
+    resultado->second.horarioInicial = criarHorario(barraca.horaInicial, barraca.MinutoInicial);
+    resultado->second.horarioFinal = criarHorario(barraca.horaFinal, barraca.MinutoFinal);
 
     return 0;
 }
@@ -91,12 +116,85 @@ int mostrarTodasBarracasEProdutos(){
     return 0;
 }
 
- int mostrarUmaBarraca(int id)
- {
+int mostrarUmaBarracaNome(std::string nome)
+{
+    auto it = std::find_if(lBarracas.begin(), lBarracas.end(), [&nome](const auto& par){
+        return par.second.nome == nome;
+    });
+
+    if (it == lBarracas.end()) {
+        return 1;
+    } 
+
+    std::cout << "Barraca " << it->second.nome << std::endl;
+    std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
+    std::cout << " até " << it->second.horarioFinal.tm_hour << " : " << it->second.horarioFinal.tm_min << std::endl;
+
+    if (!it->second.lProdutos.empty())
+    {
+        std::cout << "        Produtos: ";
+        for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
+        {
+            AuxProduto auxProduto;
+            auto verifica = buscaProduto(it2->first, auxProduto);
+            if (!verifica)
+                std::cout << "                   " << auxProduto.nome << "  -  " << it2->first;
+        }
+    }
     
- }
+    return 0;
+}
 
+int mostrarUmaBarracaId(size_t id)
+{
+    auto it = lBarracas.find(id);
+    if (it == lBarracas.end()) {
+        return 1;
+    } 
 
+    std::cout << "Barraca " << it->second.nome << std::endl;
+    std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
+    std::cout << " até " << it->second.horarioFinal.tm_hour << " : " << it->second.horarioFinal.tm_min << std::endl;
+
+    std::cout << "        Produtos: ";
+    for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
+    {
+        AuxProduto auxProduto;
+        auto verifica = buscaProduto(it2->first, auxProduto);
+        if (!verifica)
+            std::cout << "                   " << auxProduto.nome << "  -  " << it2->first;
+    }
+    
+    return 0;
+}
+
+int editarQuantidadeProduto(size_t idProduto, size_t idBarraca, int alteracao)
+{
+    auto it = lBarracas.find(idBarraca);
+    if (it == lBarracas.end()) {
+        return 1;
+    } 
+
+    auto it2 = it->second.lProdutos.find(idBarraca);
+    if (it2 == it->second.lProdutos.end()) {
+        return 2;
+    } 
+
+    it2->second += alteracao;
+    return 0;
+}
+
+int adicionaProdutoNoEstoque(size_t idProduto, int qtd, size_t idBarraca)
+{
+    auto it = lBarracas.find(idBarraca);
+    if (it == lBarracas.end()) {
+        return 1;
+    } 
+
+    it->second.lProdutos.emplace(idProduto, qtd);
+
+    return 0;
+}
 
 int main(){
     return 0;

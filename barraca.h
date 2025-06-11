@@ -1,12 +1,16 @@
 #include <string>
+#include <ctime>
 
 
 struct auxBarraca{
     std::string nome;
-    size_t horarioInicial;
-    size_t horarioFinal;
+    int horaInicial;
+    int MinutoInicial;
+    int horaFinal;
+    int MinutoFinal;
     size_t senha;
 };
+typedef struct auxBarraca AuxBarraca;
 
 int criaBarraca(auxBarraca infoBarraca);
 

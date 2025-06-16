@@ -10,7 +10,6 @@
 #include "testeBarraca.h"
 
 #include <map>
-#include <vector>
 #include <utility>
 #include <iostream>
 #include <algorithm>
@@ -142,15 +141,14 @@ int mostrarTodasBarracasEProdutos(){
         std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
         std::cout << " até " << it->second.horarioFinal.tm_hour << ":" << it->second.horarioFinal.tm_min << std::endl;
         
-        std::cout << "        Produtos: ";
+        std::cout << "        Produtos: " << it->second.lProdutos.size() << " itens  " << std::endl;
         for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
         {
             AuxProduto auxProduto;
             auto verifica = buscaProduto(it2->second, auxProduto);
             if (!verifica)
-                std::cout << "                   " << auxProduto.nome << "  -  " << it2->first;
+                std::cout << "                   " << auxProduto.nome << "  -  " << it2->second << "disponível(eis)" << std::endl;
         }
-        std::cout << std::endl;
     }
     
 
@@ -169,15 +167,14 @@ int mostrarUmaBarraca(std::string id)
     std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
     std::cout << " até " << it->second.horarioFinal.tm_hour << " : " << it->second.horarioFinal.tm_min << std::endl;
 
-    std::cout << "        Produtos: ";
+    std::cout << "        Produtos: " << it->second.lProdutos.size() << "itens" << std::endl;
     for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
     {
         AuxProduto auxProduto;
         auto verifica = buscaProduto(it2->first, auxProduto);
         if (!verifica)
-            std::cout << "                   " << auxProduto.nome << "  -  " << it2->first;
+            std::cout << "                   " << auxProduto.nome << "  -  " << it2->second << " disponível(eis)"  << std::endl;;
     }
-    
     return 0;
 }
 
@@ -199,18 +196,21 @@ int editarQuantidadeProduto(size_t idProduto, std::string idBarraca, int alterac
 }
 
 int adicionaProdutoNoEstoque(size_t idProduto, int qtd, std::string idBarraca)
-{
+{   
     auto it = lBarracas.find(idBarraca);
     if (it == lBarracas.end()) {
         return 1;
     } 
 
-    auto verifica = buscaConfirmProduto(idProduto);
-    
+    auto verifica = buscaConfirmProduto(idProduto);    
     if (verifica)
         return 2;
     
-    it->second.lProdutos.emplace(idProduto, qtd);
+    auto resultado = it->second.lProdutos.emplace(idProduto, qtd);
+
+    if (!resultado.second) {
+        return 3; 
+    }
 
     return 0;
 }

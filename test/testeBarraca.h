@@ -15,6 +15,6 @@ struct auxProduto
 
 typedef struct auxProduto AuxProduto;
 
-int buscaProduto(size_t id, AuxProduto auxProduto);
+int buscaProduto(size_t id, AuxProduto& auxProduto);
 
 int buscaConfirmProduto(size_t id);

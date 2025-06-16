@@ -8,8 +8,10 @@
 #include "barraca.h"
 #include "testeBarraca.h"
 
-int buscaProduto(size_t id, AuxProduto auxProduto){
-    return true;
+int buscaProduto(size_t id, AuxProduto& auxProduto){
+    auxProduto.id = 9;
+    auxProduto.nome = "coca";
+    return 0;
 }
 
 bool mock;
@@ -88,20 +90,6 @@ TEST_CASE("Testando função buscaBarraca")
     }
 }
 
-
-TEST_CASE("Testando mostrarUmaBarraca")
-{
-    SUBCASE("Mostra uma barraca existente")
-    {
-        CHECK(mostrarUmaBarraca("c") == 0);
-    }
-
-    SUBCASE("Tentar mostrar barraca inexistente")
-    {
-        CHECK(mostrarUmaBarraca("b") == 1);
-    }
-}
-
 TEST_CASE("Testando adicionaProdutoNoEstoque")
 {   
     mock = false;
@@ -120,6 +108,12 @@ TEST_CASE("Testando adicionaProdutoNoEstoque")
     SUBCASE("tentar adicionar produto inexistente")
     {
         CHECK(adicionaProdutoNoEstoque(10, 1, "c") == 2);
+    }
+
+    mock = false;
+    SUBCASE("tentar adicionar produto já existente no estoque")
+    {
+        CHECK(adicionaProdutoNoEstoque(9, 1, "c") == 3);
     }
 }
 
@@ -141,6 +135,19 @@ TEST_CASE("Testando função editarQuantidadeProduto")
     }
 }
 
+TEST_CASE("Testando mostrarUmaBarraca")
+{
+    SUBCASE("Mostra uma barraca existente")
+    {
+        CHECK(mostrarUmaBarraca("c") == 0);
+    }
+
+    SUBCASE("Tentar mostrar barraca inexistente")
+    {
+        CHECK(mostrarUmaBarraca("b") == 1);
+    }
+}
+
 TEST_CASE("Testando função mostrarTodasBarracasEProdutos")
 {
     SUBCASE("Mostrar todas as barracas")
@@ -157,8 +164,6 @@ TEST_CASE("Testando função mostrarTodasBarracasEProdutos")
 
 int main(int argc, char** argv) {
     doctest::Context context;
-
-    // 👇 Aqui você pode configurar tudo que quiser
     context.setOption("success", true);      // mostra testes que passaram
     context.setOption("reporters", "console"); // saída padrão
     // context.setOption("no-breaks", true); // não para no primeiro erro

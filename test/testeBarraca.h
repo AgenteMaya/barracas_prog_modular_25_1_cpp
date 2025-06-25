@@ -10,11 +10,11 @@
 struct auxProduto 
 {
     std::string nome;
-    size_t id;
+    std::string id;
 };
 
 typedef struct auxProduto AuxProduto;
 
-int buscaProduto(size_t id, AuxProduto& auxProduto);
+int buscaProduto(std::string id, AuxProduto& auxProduto);
 
-int buscaConfirmProduto(size_t id);
+int buscaConfirmProduto(std::string id);

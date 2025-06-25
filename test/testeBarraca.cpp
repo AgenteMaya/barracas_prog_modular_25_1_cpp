@@ -8,7 +8,7 @@
 #include "barraca.h"
 #include "testeBarraca.h"
 
-int buscaProduto(size_t id, AuxProduto& auxProduto){
+int buscaProduto(std::string id, AuxProduto& auxProduto){
     auxProduto.id = 9;
     auxProduto.nome = "coca";
     return 0;
@@ -16,7 +16,7 @@ int buscaProduto(size_t id, AuxProduto& auxProduto){
 
 bool mock;
 
-int buscaConfirmProduto(size_t id)
+int buscaConfirmProduto(std::string id)
 {
     return mock;
 }
@@ -87,51 +87,6 @@ TEST_CASE("Testando função buscaBarraca")
     SUBCASE("Tentar encontra barraca não existente")
     {
         CHECK(buscaBarraca("h", barracaTeste) == 1);
-    }
-}
-
-TEST_CASE("Testando adicionaProdutoNoEstoque")
-{   
-    mock = false;
-    SUBCASE("Adicionar um produto na lista de estoque")
-    {
-        CHECK(adicionaProdutoNoEstoque(9, 1, "c") == 0);
-    }
-    #undef TRUE
-    
-    SUBCASE("tentar adicionar produto em barraca inexistente")
-    {
-        CHECK(adicionaProdutoNoEstoque(9, 1, "b") == 1);
-    }
-    
-    mock = true;
-    SUBCASE("tentar adicionar produto inexistente")
-    {
-        CHECK(adicionaProdutoNoEstoque(10, 1, "c") == 2);
-    }
-
-    mock = false;
-    SUBCASE("tentar adicionar produto já existente no estoque")
-    {
-        CHECK(adicionaProdutoNoEstoque(9, 1, "c") == 3);
-    }
-}
-
-TEST_CASE("Testando função editarQuantidadeProduto")
-{
-    SUBCASE("Atualizar qtd de um produto de uma baraca existente")
-    {
-        CHECK(editarQuantidadeProduto(9, "c", 4) == 0);
-    }
-
-    SUBCASE("tentar atualizar produto em barraca inexistente")
-    {
-        CHECK(editarQuantidadeProduto(9, "b", 2) == 1);
-    }
-
-    SUBCASE("Tentar editar barraca inexistente")
-    {
-        CHECK(editarQuantidadeProduto(10, "c", 1) == 2);
     }
 }
 

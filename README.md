@@ -8,4 +8,11 @@ Exemplo: g++ -Wall -o testes -Isrc -Itest test/testeBarraca.cpp src/barraca.cpp
 
          ./testes --sucess
 
+g++ -Wall -o testesPedido -Isrc -Itest test/testePedido.cpp src/pedido.cpp
+
+        ./testesPedido --sucess
+
+g++ -Wall -o testesPedido -Isrc -Itest test/testeEstoque.cpp src/estoque.cpp
+
+        ./testesEstoque --sucess
 

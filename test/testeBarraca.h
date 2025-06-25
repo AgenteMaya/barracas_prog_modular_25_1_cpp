@@ -18,3 +18,5 @@ typedef struct auxProduto AuxProduto;
 int buscaProduto(std::string id, AuxProduto& auxProduto);
 
 int buscaConfirmProduto(std::string id);
+
+int mostrarItensNoEstoqueUmaBarraca(std::string barraca);

@@ -6,13 +6,13 @@
 #include <string>
 #include <ctime>
 
-struct auxProduto
+/* struct auxProduto
 {
     std::string nome;
     size_t qtd;
     float preco;
 };
-
+ */
 struct auxBarraca{
     std::string nome;
     int horaInicial;
@@ -27,11 +27,11 @@ typedef struct auxBarraca AuxBarraca;
 
 int criaBarraca(auxBarraca infoBarraca);
 
-int atualizaBarraca (auxBarraca infoBarraca, std::string id);
+int atualizaBarraca (auxBarraca infoBarraca);
 
 int excluiBarraca (std::string id);
 
-int buscaBarraca (std::string id, auxBarraca& barraca);
+int buscaBarraca (auxBarraca& barraca);
 
 int mostrarTodasBarracasEProdutos();
 
@@ -42,3 +42,5 @@ int editarQuantidadeProduto(std::string idProduto, std::string idBarraca, int al
 int adicionaProdutoNoEstoque(std::string idProduto, int qtd, std::string idBarraca);
 
 void excluirTodasBarracas ();
+
+int buscaConfirmaBarraca(std::string id);

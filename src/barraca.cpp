@@ -53,38 +53,22 @@ int criaBarraca (auxBarraca infoBarraca)
     return 0;
 }
 
-int atualizaBarraca (auxBarraca infoBarraca, std::string id)
+int atualizaBarraca (auxBarraca infoBarraca)
 {
-    auto resultado = lBarracas.find(id);
+    auto resultado = lBarracas.find(infoBarraca.nome);
     if (resultado == lBarracas.end()) {
         return 1; 
     }
-    
-    resultado = lBarracas.find(infoBarraca.nome);
-    if (resultado != lBarracas.end()) {
-        return 2; 
-    }
 
-    auto barraca = lBarracas.extract(id);
-    barraca.key() = infoBarraca.nome;
-
-    Barraca novaBarraca{};
-    novaBarraca.nome = infoBarraca.nome;
-    novaBarraca.horarioInicial = criarHorario(infoBarraca.horaInicial, infoBarraca.MinutoInicial);
-    novaBarraca.horarioFinal = criarHorario(infoBarraca.horaFinal, infoBarraca.MinutoFinal);
-    novaBarraca.senha = infoBarraca.senha;
-
-    barraca.mapped() = novaBarraca;
-
-    lBarracas.insert(std::move(barraca));
-
+    resultado->second.horarioInicial = criarHorario(infoBarraca.horaInicial, infoBarraca.MinutoInicial);
+    resultado->second.horarioFinal = criarHorario(infoBarraca.horaFinal, infoBarraca.MinutoFinal);
+    resultado->second.senha = infoBarraca.senha;
     return 0;
-
 }
 
-int excluiBarraca (std::string id){
+int excluiBarraca (std::string nomeBarraca){
     
-    auto resultado = lBarracas.erase(id);
+    auto resultado = lBarracas.erase(nomeBarraca);
     if (resultado) //se a chave existir
         return 0;
     return 1;
@@ -99,9 +83,9 @@ void excluirTodasBarracas ()
 #endif
 
 
-int buscaConfirmBarraca(std::string id)
+int buscaConfirmBarraca(std::string nomeBarraca)
 {
-    auto resultado = lBarracas.find(id);
+    auto resultado = lBarracas.find(nomeBarraca);
 
     if (resultado == lBarracas.end()) {
         return 1; 
@@ -109,21 +93,19 @@ int buscaConfirmBarraca(std::string id)
     return 0;
 }
 
-int buscaBarraca (std::string id, auxBarraca& barraca)
+int buscaBarraca (auxBarraca& barraca)
 {
-    auto resultado = lBarracas.find(id);
+    auto resultado = lBarracas.find(barraca.nome);
 
     if (resultado == lBarracas.end()) {
         return 1; 
     } 
 
-    barraca.nome = resultado->second.nome;
     barraca.horaInicial = resultado->second.horarioInicial.tm_hour;
     barraca.MinutoInicial = resultado->second.horarioInicial.tm_min; 
     barraca.horaFinal = resultado->second.horarioFinal.tm_hour;
     barraca.MinutoFinal = resultado->second.horarioFinal.tm_min;
     barraca.senha = resultado->second.senha;   
-
     return 0;
 }
 
@@ -134,25 +116,14 @@ int mostrarTodasBarracasEProdutos(){
         std::cout << "Não há Barracas cadastradas. " << std::endl;
         return 1;
     }
-        
 
     for(auto it = lBarracas.begin(); it != lBarracas.end(); it++)
     {
         std::cout << "Barraca " << it->second.nome << std::endl;
         std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
         std::cout << " até " << it->second.horarioFinal.tm_hour << ":" << it->second.horarioFinal.tm_min << std::endl;
-        
-        std::cout << "        Produtos: " << it->second.lProdutos.size() << " itens  " << std::endl;
-        for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
-        {
-            AuxProduto auxProduto;
-            auto verifica = buscaProduto(it2->first, auxProduto);
-            if (!verifica)
-                std::cout << "                   " << auxProduto.nome << "  -  " << it2->second.qtd << "disponível(eis). Valor: " << it2->second.preco << std::endl;
-        }
+        mostrarItensNoEstoqueUmaBarraca(it->second.nome);        
     }
-    
-
     return 0;
 }
 
@@ -167,29 +138,16 @@ int mostrarUmaBarraca(std::string id)
     std::cout << "Barraca " << it->second.nome << std::endl;
     std::cout << "Horários:  " << it->second.horarioInicial.tm_hour << ":" << it->second.horarioInicial.tm_min;
     std::cout << " até " << it->second.horarioFinal.tm_hour << " : " << it->second.horarioFinal.tm_min << std::endl;
+    mostrarItensNoEstoqueUmaBarraca(it->second.nome);        
 
-    std::cout << "        Produtos: " << it->second.lProdutos.size() << "itens" << std::endl;
-    for(auto it2 = it->second.lProdutos.begin(); it2 != it->second.lProdutos.end(); it2++)
-    {
-        AuxProduto auxProduto;
-        auto verifica = buscaProduto(it2->first, auxProduto);
-        if (!verifica)
-            std::cout << "                   " << auxProduto.nome << "  -  " << it2->second.qtd << " disponível(eis). Valor: " << it2->second.preco << std::endl;;
-    }
     return 0;
 }
 
-int confereNoEstoque(std::string produto, std::string nomeBarraca, float preco)
+int buscaConfirmaBarraca(std::string nomeBarraca)
 {
-    auto barraca = lBarracas.find(nomeBarraca);
-    if (barraca == lBarracas.end()) {
-        return 1; 
-    }
-
-    auto produtoAchado = barraca->second.lProdutos.find(produto);
-    if (produtoAchado == barraca->second.lProdutos.end() || produtoAchado->second.qtd == 0){ 
-        return 2;
-    }
-    
+    auto it = lBarracas.find(nomeBarraca);
+    if (it == lBarracas.end()) {
+        return 1;
+    } 
     return 0;
 }

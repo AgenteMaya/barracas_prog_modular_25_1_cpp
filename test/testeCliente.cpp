@@ -87,6 +87,18 @@ TEST_CASE("Testando função buscaCliente") {
     }
 }
 
+TEST_CASE("Testando função buscaConfirmCliente") {
+    AuxCliente clienteBuscado;
+
+    SUBCASE("Busca cliente com sucesso") {
+        CHECK(buscaConfirmCliente(11111111111) == 0);
+    }
+
+    SUBCASE("Cliente inexistente") {
+        CHECK(buscaConfirmCliente(99999999999) == 1);
+    }
+}
+
 int main(int argc, char** argv) {
     doctest::Context context;
     context.setOption("success", true);

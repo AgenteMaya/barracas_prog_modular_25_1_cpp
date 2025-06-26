@@ -56,6 +56,15 @@ int buscaCliente(AuxCliente& cliente) {
     return 0;
 }
 
+int buscaConfirmCliente(long long cpf)
+{
+    auto it = lClientes.find(cpf);
+    if (it == lClientes.end()) {
+        return 1;
+    } 
+    return 0;
+}
+
 #ifdef TESTE_ON
 void excluirTodosClientes() {
     lClientes.clear();

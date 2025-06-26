@@ -35,6 +35,8 @@ int excluiCliente(long long cpf);
  */
 int buscaCliente(AuxCliente& cliente);
 
+int buscaConfirmCliente(long long cpf);
+
 /**
  * Apaga todos os clientes da memória (apenas com TESTE_ON definido).
  */

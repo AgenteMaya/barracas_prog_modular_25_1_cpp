@@ -37,7 +37,7 @@ std::tm criarHorario(int hora, int minuto) {
     return horario;
 }
 
-int criaBarraca (auxBarraca infoBarraca)
+int criaBarraca (AuxBarraca infoBarraca)
 {
     Barraca novaBarraca{};
     novaBarraca.nome = infoBarraca.nome;
@@ -53,7 +53,7 @@ int criaBarraca (auxBarraca infoBarraca)
     return 0;
 }
 
-int atualizaBarraca (auxBarraca infoBarraca)
+int atualizaBarraca (AuxBarraca infoBarraca)
 {
     auto resultado = lBarracas.find(infoBarraca.nome);
     if (resultado == lBarracas.end()) {
@@ -93,7 +93,7 @@ int buscaConfirmBarraca(std::string nomeBarraca)
     return 0;
 }
 
-int buscaBarraca (auxBarraca& barraca)
+int buscaBarraca (AuxBarraca& barraca)
 {
     auto resultado = lBarracas.find(barraca.nome);
 
@@ -147,6 +147,15 @@ int buscaConfirmaBarraca(std::string nomeBarraca)
 {
     auto it = lBarracas.find(nomeBarraca);
     if (it == lBarracas.end()) {
+        return 1;
+    } 
+    return 0;
+}
+
+int fazerLoginBarraca(AuxBarraca loginBarraca)
+{
+    auto it = lBarracas.find(loginBarraca.nome);
+    if (it == lBarracas.end() || it->second.senha != loginBarraca.senha) {
         return 1;
     } 
     return 0;

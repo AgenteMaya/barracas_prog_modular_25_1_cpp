@@ -29,7 +29,6 @@ int buscaPedidoClienteFinalizado(int cpf);
 int buscaPedidoClienteNFinalizado(int cpf);
 int edicaoPedido(auxPedido edicao);
 int finalizarPedido(std::string idPedido);
-int buscaPedidoClienteFinalizado(int cpf);
 int buscaPedidosBarraca(std::string id);
 
 

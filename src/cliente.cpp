@@ -65,6 +65,15 @@ int buscaConfirmCliente(long long cpf)
     return 0;
 }
 
+int fazerLoginCliente(AuxCliente clienteLogin)
+{
+    auto it = lClientes.find(clienteLogin.cpf);
+    if (it == lClientes.end() || it->second.senha != clienteLogin.senha) {
+        return 1;
+    } 
+    return 0;
+}
+
 #ifdef TESTE_ON
 void excluirTodosClientes() {
     lClientes.clear();

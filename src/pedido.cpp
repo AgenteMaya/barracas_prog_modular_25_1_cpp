@@ -97,6 +97,14 @@ int edicaoPedido(auxPedido edicao)
         return 4;
     } 
 
+    AuxEstoque infoEstoque{};
+    infoEstoque.nomeBarraca = edicao.nomeBarraca;
+    infoEstoque.nomeProduto = edicao.nomeProduto;
+    auto verifica = confereNoEstoque(infoEstoque);
+    if (verifica)
+        return verifica + 3; //retorna 2 se a barraca não existe e 3 se o produto está fora de estoque
+
+
     auto produto = pedido->second.lItens.find(edicao.nomeProduto);
     if (produto == pedido->second.lItens.end())
     {

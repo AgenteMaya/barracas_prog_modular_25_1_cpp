@@ -13,7 +13,7 @@
     float preco;
 };
  */
-struct auxBarraca{
+struct AuxBarraca{
     std::string nome;
     int horaInicial;
     int MinutoInicial;
@@ -22,25 +22,20 @@ struct auxBarraca{
     size_t senha;
 };
 
-typedef struct auxProduto AuxProduto;
-typedef struct auxBarraca AuxBarraca;
+int criaBarraca(AuxBarraca infoBarraca);
 
-int criaBarraca(auxBarraca infoBarraca);
-
-int atualizaBarraca (auxBarraca infoBarraca);
+int atualizaBarraca (AuxBarraca infoBarraca);
 
 int excluiBarraca (std::string id);
 
-int buscaBarraca (auxBarraca& barraca);
+int buscaBarraca (AuxBarraca& barraca);
 
 int mostrarTodasBarracasEProdutos();
 
 int mostrarUmaBarraca(std::string id);
 
-int editarQuantidadeProduto(std::string idProduto, std::string idBarraca, int alteracao);
-
-int adicionaProdutoNoEstoque(std::string idProduto, int qtd, std::string idBarraca);
-
 void excluirTodasBarracas ();
 
 int buscaConfirmaBarraca(std::string id);
+
+int fazerLoginBarraca(AuxBarraca loginBarraca);

@@ -42,4 +42,7 @@ int buscaConfirmCliente(long long cpf);
  */
 void excluirTodosClientes();
 
+int fazerLoginCliente(AuxCliente clienteLogin);
+
+
 #endif // CLIENTE_H

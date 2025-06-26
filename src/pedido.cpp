@@ -1,10 +1,14 @@
 #include "pedido.h"
-#include "testePedido.h"
+#include "estoquePedido.h"
+#include "clientePedido.h"
+#include "barracaPedido.h"
+//#include "testePedido.h"
 #include "uuid.h"
 #include <map>
 #include <ctime>
 #include <iostream>
-
+#include <fstream>
+#include <sstream>
 
 struct Pedido{
     int cpfCliente;
@@ -26,7 +30,7 @@ std::string criaId()
     return std::to_string(valor);
 }
 
-int criaPedido(auxPedido infoPedido)
+int criaPedido(AuxPedido infoPedido)
 {
     Pedido pedidoNovo{};
     pedidoNovo.cpfCliente = infoPedido.cpfCliente;
@@ -43,6 +47,7 @@ int criaPedido(auxPedido infoPedido)
 
     AuxEstoque item;
     item.nomeBarraca = infoPedido.nomeBarraca;
+    std::cout << infoPedido.nomeBarraca << std::endl;
     item.nomeProduto = infoPedido.nomeProduto;
     auto verifica = confereNoEstoque(item);
     if (verifica)
@@ -85,7 +90,7 @@ int criaPedido(auxPedido infoPedido)
     return 0;
 }
 
-int edicaoPedido(auxPedido edicao)
+int edicaoPedido(AuxPedido edicao)
 {
     auto pedido = lPedidos.find(edicao.id);
     if (pedido == lPedidos.end())
@@ -102,7 +107,7 @@ int edicaoPedido(auxPedido edicao)
     infoEstoque.nomeProduto = edicao.nomeProduto;
     auto verifica = confereNoEstoque(infoEstoque);
     if (verifica)
-        return verifica + 3; //retorna 2 se a barraca não existe e 3 se o produto está fora de estoque
+        return verifica + 4; //retorna 5 se a barraca não existe e 6 se o produto está fora de estoque
 
 
     auto produto = pedido->second.lItens.find(edicao.nomeProduto);
@@ -179,7 +184,7 @@ int buscaPedidoClienteFinalizado(int cpf)
 
 int buscaPedidosBarraca(std::string barraca)
 {
-    auto verifica = buscaConfirmBarraca(barraca);
+    auto verifica = buscaConfirmaBarraca(barraca);
     if (verifica)
         return 1;
     for(auto& pedido : lPedidos)
@@ -197,3 +202,105 @@ int buscaPedidosBarraca(std::string barraca)
     return 0;
 }
 
+int buscaBarracaPedido(AuxPedido& pedidoProcurado)
+{
+    auto pedido = lPedidos.find(pedidoProcurado.id);
+    if (pedido == lPedidos.end()) {
+        return 1; 
+    }
+
+    pedidoProcurado.nomeBarraca = pedido->second.nomeBarraca;
+
+    return 0;
+}
+
+bool salvaPedidoCSV(std::ofstream& arquivo) {
+    if (!arquivo.is_open()) return false;
+
+    for (const auto& par : lPedidos) {
+        const Pedido& p = par.second;
+
+        std::ostringstream itensSerializados;
+        for (auto it = p.lItens.begin(); it != p.lItens.end(); ++it) {
+            itensSerializados << it->first << ":" << it->second;
+            if (std::next(it) != p.lItens.end()) {
+                itensSerializados << ";";
+            }
+        }
+
+        arquivo << p.id << ","
+                << p.cpfCliente << ","
+                << p.nomeBarraca << ","
+                << p.verificaFinalizado << ","
+                << p.horarioPedido.tm_hour << ","
+                << p.horarioPedido.tm_min << ","
+                << p.preco << ","
+                << "\"" << itensSerializados.str() << "\"" << std::endl;
+    }
+
+    return arquivo.good();
+}
+
+bool carregaPedidosCSV(std::ifstream& arquivo) {
+    if (!arquivo.is_open()) return false;
+
+    std::string linha;
+    bool carregouAlgum = false;
+
+    while (std::getline(arquivo, linha)) {
+        std::istringstream ss(linha);
+        std::string campo;
+        Pedido p;
+
+        // ID
+        if (!std::getline(ss, campo, ',')) continue;
+        p.id = campo;
+
+        // CPF
+        if (!std::getline(ss, campo, ',')) continue;
+        p.cpfCliente = std::stoi(campo);
+
+        // Nome barraca
+        if (!std::getline(ss, campo, ',')) continue;
+        p.nomeBarraca = campo;
+
+        // Finalizado
+        if (!std::getline(ss, campo, ',')) continue;
+        p.verificaFinalizado = (campo == "1");
+
+        // Hora
+        if (!std::getline(ss, campo, ',')) continue;
+        p.horarioPedido.tm_hour = std::stoi(campo);
+
+        // Minuto
+        if (!std::getline(ss, campo, ',')) continue;
+        p.horarioPedido.tm_min = std::stoi(campo);
+
+        // Preço
+        if (!std::getline(ss, campo, ',')) continue;
+        p.preco = std::stoi(campo);
+
+        // Itens
+        if (!std::getline(ss, campo)) continue;
+
+        if (!campo.empty() && campo.front() == '"' && campo.back() == '"') {
+            campo = campo.substr(1, campo.length() - 2);
+        }
+        std::istringstream itensStream(campo);
+        std::string itemPar;
+
+        while (std::getline(itensStream, itemPar, ';')) {
+            size_t pos = itemPar.find(':');
+            if (pos != std::string::npos) {
+                std::string nome = itemPar.substr(0, pos);
+                size_t qtd = std::stoul(itemPar.substr(pos + 1));
+                p.lItens[nome] = qtd;
+            }
+        }
+
+        lPedidos[p.id] = p;
+        carregouAlgum = true;
+    }
+
+    return carregouAlgum;
+}

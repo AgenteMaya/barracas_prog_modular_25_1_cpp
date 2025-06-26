@@ -11,29 +11,121 @@ struct auxCliente {
 };
 typedef struct auxCliente AuxCliente;
 
-/**
- * Cria um cliente com os dados fornecidos.
- * @return 0 se criado com sucesso, 1 se nome/senha inválido ou já existe, 2 se CPF inválido.
- */
+/*
+Objetivo: Criar um novo cliente
+
+Acoplamentos:
+
+--> Parâmetros:
+    AuxCliente infoCliente: estrutura contendo nome, CPF e senha do novo cliente.
+
+--> Retornos:
+    - 0 caso o cliente tenha sido criado com sucesso
+    - 1 caso o nome/senha já exista
+    - 2 caso o CPF seja inválido
+
+Condições de acoplamento:
+
+--> Assertivas de entrada:
+    - O CPF deve ser positivo
+    - O nome não pode estar vazio
+    - A senha deve ter no máximo 10 caracteres
+    - O CPF não pode já existir no mapa
+
+--> Assertivas de saída:
+    - Um novo cliente é adicionado ao mapa `lClientes`
+*/
 int criaCliente(AuxCliente infoCliente);
 
-/**
- * Atualiza o nome do cliente com o CPF fornecido.
- * @return 0 se atualizado com sucesso, 1 se cliente não encontrado, 2 se CPF inválido.
- */
+/*
+Objetivo: Atualizar o nome de um cliente com CPF cadastrado.
+
+Acoplamentos:
+
+--> Parâmetros:
+    AuxCliente cliente: estrutura com CPF já cadastrado e novos dados a serem atualizados.
+
+--> Retornos:
+    - 0 caso a atualização tenha sido realizada com sucesso
+    - 1 caso o cliente não encontrado
+    - 2 caso o CPF seja inválido
+
+Condições de acoplamento:
+
+--> Assertivas de entrada:
+    - O CPF deve ser positivo e já existir em `lClientes`
+
+--> Assertivas de saída:
+    - O nome e a senha do cliente são atualizados no mapa
+*/
 int atualizaCliente(AuxCliente infoCliente);
 
-/**
- * Exclui o cliente com o CPF fornecido.
- * @return 0 se excluído com sucesso, 1 se não encontrado, 2 se CPF inválido.
- */
+/*
+Objetivo: Excluir um cliente do sistema.
+
+Acoplamentos:
+
+--> Parâmetros:
+    long long cpf: número do CPF do cliente a ser removido.
+
+--> Retornos:
+    - 0 caso o cliente tenha sido removido com sucesso
+    - 1 caso o cliente não exista
+    - 2 caso o CPF seja inválido
+
+Condições de acoplamento:
+
+--> Assertivas de entrada:
+    - O CPF deve ser válido
+
+--> Assertivas de saída:
+    - O cliente correspondente é removido do mapa
+*/
 int excluiCliente(long long cpf);
 
-/**
- * Busca um cliente pelo CPF e preenche a estrutura fornecida.
- * @return 0 se encontrado, 1 se não encontrado, 2 se CPF inválido.
- */
+/*
+Objetivo: Consultar os dados de um cliente a partir do CPF e preenche a estrutura fornecida.
+
+Acoplamentos:
+
+--> Parâmetros:
+    AuxCliente& cliente: estrutura com CPF preenchido e campos `nome` e `senha` a serem preenchidos na busca.
+
+--> Retornos:
+    - 0 caso o cliente seja encontrado
+    - 1 caso o cliente não exista
+    - 2 caso o CPF seja inválido
+
+Condições de acoplamento:
+
+--> Assertivas de entrada:
+    - O CPF deve ser válido
+
+--> Assertivas de saída:
+    - A estrutura 'cliente' é preenchida com 'nome' e 'senha' correspondentes ao CPF
+*/
 int buscaCliente(AuxCliente& cliente);
+
+/*
+Objetivo: Verificar se um cliente com o CPF informado existe no sistema.
+
+Acoplamentos:
+
+--> Parâmetros:
+    long long cpf: número do CPF a ser verificado.
+
+--> Retornos:
+    - 0 caso o cliente exista
+    - 1 caso o cliente não exista
+
+Condições de acoplamento:
+
+--> Assertivas de entrada:
+    - O CPF deve ser válido
+
+--> Assertivas de saída:
+    - A função informa se há ou não um cliente com aquele CPF no sistema
+*/
 
 int buscaConfirmCliente(long long cpf);
 
@@ -44,5 +136,8 @@ void excluirTodosClientes();
 
 int fazerLoginCliente(AuxCliente clienteLogin);
 
+bool carregaClienteCSV(std::ifstream& arquivo);
+
+bool salvaClienteCSV(std::ofstream& arquivo);
 
 #endif // CLIENTE_H

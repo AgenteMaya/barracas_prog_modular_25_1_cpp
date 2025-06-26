@@ -1,15 +1,15 @@
 // cliente.cpp
 #include "cliente.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <map>
 
-struct cliente {
+struct Cliente {
     std::string nome;
     long long cpf;
     std::string senha;
 };
-
-typedef struct cliente Cliente;
 
 static std::map<long long, Cliente> lClientes;
 
@@ -72,6 +72,54 @@ int fazerLoginCliente(AuxCliente clienteLogin)
         return 1;
     } 
     return 0;
+}
+
+bool salvaClienteCSV(std::ofstream& arquivo) {
+
+    if (!arquivo.is_open()) {
+        return false;
+    }
+
+    for(auto& cliente : lClientes)
+    {
+        arquivo << cliente.second.nome << "," << cliente.second.cpf << "," << cliente.second.senha << "\n";
+    }
+    return arquivo.good();
+}
+
+bool carregaClienteCSV(std::ifstream& arquivo) {
+    std::string linha;
+    bool carregouAlgum = false;
+
+    while (std::getline(arquivo, linha)) {
+        std::istringstream ss(linha);
+        std::string campo;
+        Cliente cliente;
+
+        // Nome
+        if (!std::getline(ss, campo, ','))
+            continue;
+        cliente.nome = campo;
+
+        // CPF
+        if (!std::getline(ss, campo, ','))
+            continue;
+        try {
+            cliente.cpf = std::stoll(campo);
+        } catch (...) {
+            continue;
+        }
+
+        // Senha
+        if (!std::getline(ss, campo))
+            continue;
+        cliente.senha = campo;
+
+        lClientes[cliente.cpf] = cliente;
+        carregouAlgum = true;
+    }
+
+    return carregouAlgum;
 }
 
 #ifdef TESTE_ON

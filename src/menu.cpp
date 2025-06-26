@@ -7,7 +7,7 @@
 
 int verificaEntradaNum()
 {
-    if (!std::cin.fail()) 
+    if (std::cin.fail()) 
     {
         std::cout << "Dado inserido não é um número, preencha novamente os dados." << std::endl;
         std::cin.clear(); // limpa o estado de erro
@@ -45,14 +45,13 @@ int menuCliente(long long cpfCliente)
         std::cout << "0. Sair" << std::endl;
         std::cout << "Escolha uma opcao: ";
         std::cin >> opcaoCliente;
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (opcaoCliente) {
             case 1: {
                 AuxCliente cliente;
                 cliente.cpf = cpfCliente;
                 std::cout << "Digite o novo nome: " << std::endl;
-                std::cin.ignore();
                 std::getline(std::cin, cliente.nome);
 
                 std::cout << "Digite a nova senha: " << std::endl;
@@ -63,15 +62,13 @@ int menuCliente(long long cpfCliente)
                 break;
             }
             case 2: {
-                auxPedido novoPedido;
+                AuxPedido novoPedido;
                 novoPedido.cpfCliente = cpfCliente;
-
+                novoPedido.id = "";
                 std::cout << "Digite o nome da barraca: " << std::endl;
-                std::cin.ignore();
                 std::getline(std::cin, novoPedido.nomeBarraca);
 
                 std::cout << "Digite o nome do produto: " << std::endl;
-                std::cin.ignore();
                 std::getline(std::cin, novoPedido.nomeProduto);
 
                 std::cout << "Digite a qtd do produto: " << std::endl;
@@ -109,13 +106,16 @@ int menuCliente(long long cpfCliente)
                 break;
             }
             case 7: {
-                auxPedido edicao;
+                AuxPedido edicao;
                 std::cout << "Digite o ID do pedido para editar: ";
                 std::cin >> edicao.id;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                buscaBarracaPedido(edicao);
+
                 edicao.cpfCliente = cpfCliente;
 
                 std::cout << "Digite o nome do item: " << std::endl;
-                std::cin.ignore();
                 std::getline(std::cin, edicao.nomeProduto);
 
                 std::cout << "Digite a qtd do produto: " << std::endl;
@@ -393,4 +393,5 @@ int exibirMenu() {
         }
 
     }
+    return 0;
 }

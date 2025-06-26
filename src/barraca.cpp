@@ -7,12 +7,16 @@
 
 
 #include "barraca.h"
-#include "testeBarraca.h"
+#include "estoqueBarraca.h"
+
+//#include "testeBarraca.h"
 
 #include <map>
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 typedef struct produto Produto;
 
@@ -50,6 +54,7 @@ int criaBarraca (AuxBarraca infoBarraca)
     if (!resultado.second) {
         return 1; 
     }   
+    criaEstoque(novaBarraca.nome);
     return 0;
 }
 
@@ -159,4 +164,67 @@ int fazerLoginBarraca(AuxBarraca loginBarraca)
         return 1;
     } 
     return 0;
+}
+
+bool salvaBarracaCSV(std::ofstream& arquivo) {
+    if (!arquivo.is_open()) {
+        return false;
+    }
+
+    for (const auto& b : lBarracas) {
+        const barraca& barr = b.second;
+
+        arquivo << barr.nome << ","
+                << barr.horarioInicial.tm_hour << "," << barr.horarioInicial.tm_min << ","
+                << barr.horarioFinal.tm_hour << "," << barr.horarioFinal.tm_min << ","
+                << barr.senha << std::endl;
+    }
+
+    return arquivo.good();
+}
+
+bool carregaBarracasCSV(std::ifstream& arquivo) {
+    if (!arquivo.is_open()) {
+        return false;
+    }
+
+    std::string linha;
+    bool carregouAlgum = false;
+
+    while (std::getline(arquivo, linha)) {
+        std::istringstream ss(linha);
+        std::string campo;
+        barraca b;
+
+        // Nome
+        if (!std::getline(ss, campo, ','))
+            continue;
+        b.nome = campo;
+
+        // Horário Inicial
+        if (!std::getline(ss, campo, ','))
+            continue;
+        b.horarioInicial.tm_hour = std::stoi(campo);
+        if (!std::getline(ss, campo, ','))
+            continue;
+        b.horarioInicial.tm_min = std::stoi(campo);
+
+        // Horário Final
+        if (!std::getline(ss, campo, ','))
+            continue;
+        b.horarioFinal.tm_hour = std::stoi(campo);
+        if (!std::getline(ss, campo, ','))
+            continue;
+        b.horarioFinal.tm_min = std::stoi(campo);
+
+        // Senha
+        if (!std::getline(ss, campo))
+            continue;
+        b.senha = static_cast<size_t>(std::stoull(campo));
+
+        lBarracas[b.nome] = b;
+        carregouAlgum = true;
+    }
+
+    return carregouAlgum;
 }

@@ -8,15 +8,15 @@
 
 #include "barraca.h"
 #include "testeBarraca.h"
+#include "json.hpp"
 
 #include <map>
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <ostream>
 
-typedef struct produto Produto;
-
-struct barraca
+struct Barraca
 {
     std::string nome;
     tm horarioInicial;
@@ -24,9 +24,9 @@ struct barraca
     size_t senha;
 };
 
-typedef struct barraca Barraca;
-
 static std::map<std::string, Barraca> lBarracas;
+
+using json = nlohmann::json;
 
 std::tm criarHorario(int hora, int minuto) {
     std::tm horario{};
@@ -37,7 +37,7 @@ std::tm criarHorario(int hora, int minuto) {
     return horario;
 }
 
-int criaBarraca (auxBarraca infoBarraca)
+int criaBarraca (AuxBarraca infoBarraca)
 {
     Barraca novaBarraca{};
     novaBarraca.nome = infoBarraca.nome;
@@ -53,7 +53,7 @@ int criaBarraca (auxBarraca infoBarraca)
     return 0;
 }
 
-int atualizaBarraca (auxBarraca infoBarraca)
+int atualizaBarraca (AuxBarraca infoBarraca)
 {
     auto resultado = lBarracas.find(infoBarraca.nome);
     if (resultado == lBarracas.end()) {
@@ -93,7 +93,7 @@ int buscaConfirmBarraca(std::string nomeBarraca)
     return 0;
 }
 
-int buscaBarraca (auxBarraca& barraca)
+int buscaBarraca (AuxBarraca& barraca)
 {
     auto resultado = lBarracas.find(barraca.nome);
 
@@ -150,4 +150,20 @@ int buscaConfirmaBarraca(std::string nomeBarraca)
         return 1;
     } 
     return 0;
+}
+
+int guardaNoArquivo(std::ostream& arq)
+{
+    
+
+    for (auto& barraca : lBarracas)
+    {
+        json jBarraca;
+        jBarraca["nome"] = barraca.second.nome;
+        jBarraca["horaInicio"] = barraca.second.horarioInicial.tm_hour;
+        jBarraca["minutoInicio"] = barraca.second.horarioInicial.tm_min;
+        jBarraca["horaFinal"] = barraca.second.horarioFinal.tm_hour;
+        jBarraca["minutoFinal"] = barraca.second.horarioFinal.tm_min;
+        jBarraca["senha"] = barraca.second.senha;
+    }
 }

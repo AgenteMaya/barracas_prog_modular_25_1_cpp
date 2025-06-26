@@ -28,7 +28,7 @@ int mostrarItensNoEstoqueUmaBarraca(std::string barraca){
 
 TEST_CASE("Testando função criaBarraca")
 {
-    auxBarraca barracaNova{"a", 8, 30, 19, 30, 1234};
+    AuxBarraca barracaNova{"a", 8, 30, 19, 30, 1234};
     SUBCASE("Cria barraca nova")
     {
         CHECK(criaBarraca(barracaNova) == 0);
@@ -45,8 +45,8 @@ TEST_CASE("Testando função criaBarraca")
 TEST_CASE("Testando função atualizaBarraca")
 {
 
-    auxBarraca barracaNovaB{"b", 9, 30, 20, 30, 1234};
-    auxBarraca barracaNovaA{"a", 10, 30, 21, 30, 1234};
+    AuxBarraca barracaNovaB{"b", 9, 30, 20, 30, 1234};
+    AuxBarraca barracaNovaA{"a", 10, 30, 21, 30, 1234};
 
     SUBCASE("Atualizar barraca já existente")
     {
@@ -63,7 +63,7 @@ TEST_CASE("Testando função atualizaBarraca")
 
 TEST_CASE("Testando função excluiBarraca")
 {
-    auxBarraca barracaNovaB{"b", 9, 30, 20, 30, 1234};
+    AuxBarraca barracaNovaB{"b", 9, 30, 20, 30, 1234};
     criaBarraca(barracaNovaB);
     SUBCASE("Exclui uma barraca existente")
     {
@@ -78,14 +78,14 @@ TEST_CASE("Testando função excluiBarraca")
 
 TEST_CASE("Testando função buscaBarraca")
 {
-    auxBarraca barracaTesteExistente;
+    AuxBarraca barracaTesteExistente;
     barracaTesteExistente.nome = "a";
     SUBCASE("Encontrar barraca existente")
     {
         CHECK(buscaBarraca(barracaTesteExistente) == 0);
     }
 
-    auxBarraca barracaTesteNExistente;
+    AuxBarraca barracaTesteNExistente;
     barracaTesteNExistente.nome = "h";
 
     SUBCASE("Tentar encontra barraca não existente")
@@ -104,6 +104,17 @@ TEST_CASE("Testando mostrarUmaBarraca")
     SUBCASE("Tentar mostrar barraca inexistente")
     {
         CHECK(mostrarUmaBarraca("h") == 1);
+    }
+}
+
+TEST_CASE("Testando função buscaConfirmaBarraca")
+ {
+    SUBCASE("Busca barraca com sucesso") {
+        CHECK(buscaConfirmaBarraca("a") == 0);
+    }
+
+    SUBCASE("Barraca inexistente") {
+        CHECK(buscaConfirmaBarraca("h") == 1);
     }
 }
 

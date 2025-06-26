@@ -1,6 +1,9 @@
-#include "estoque.h"
-#include "barracaEstoque.h"
-//#include "testeEstoque.h"
+#ifdef TESTE_ON
+    #include "testeEstoque.h"
+#else
+    #include "estoque.h"
+    #include "barracaEstoque.h"
+#endif
 #include <map>
 #include <iostream>
 #include <fstream>

@@ -5,7 +5,7 @@ Trabalho de programação Modular do grupo 8 - INF1301 - 2025.1 - versão C++
 Para rodar os testes:
 
 Exemplo: 
-        g++ -Wall -o testes -Isrc -Itest test/testeBarraca.cpp src/barraca.cpp
+        g++ -Wall -o testesBarraca -Isrc -Itest test/testeBarraca.cpp src/barraca.cpp
 
          ./testes --sucess
 
@@ -20,3 +20,6 @@ Exemplo:
         g++ -Wall -o testesCliente -Isrc -Itest test/testeCliente.cpp src/cliente.cpp
 
         ./testesCliente --sucess
+
+        g++ -Wall src/*.cpp -o main
+        ./main

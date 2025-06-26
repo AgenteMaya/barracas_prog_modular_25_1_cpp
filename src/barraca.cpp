@@ -4,19 +4,20 @@
  *
  */
 
+#ifdef TESTE_ON
+    #include "testeBarraca.h"
+#else
+    #include "barraca.h"
+    #include "estoqueBarraca.h"
+#endif
 
+    #include <map>
+    #include <utility>
+    #include <iostream>
+    #include <algorithm>
+    #include <fstream>
+    #include <sstream>
 
-#include "barraca.h"
-#include "estoqueBarraca.h"
-
-//#include "testeBarraca.h"
-
-#include <map>
-#include <utility>
-#include <iostream>
-#include <algorithm>
-#include <fstream>
-#include <sstream>
 
 typedef struct produto Produto;
 
@@ -80,12 +81,11 @@ int excluiBarraca (std::string nomeBarraca){
 }
 
 
-#ifdef TESTE_ON
 void excluirTodasBarracas ()
 {    
     lBarracas.clear();
 }
-#endif
+
 
 
 int buscaConfirmBarraca(std::string nomeBarraca)

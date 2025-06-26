@@ -6,13 +6,13 @@
 
 
 bool mockBarraca;
-int buscaConfirmBarraca(std::string nomeBarraca)
+int buscaConfirmaBarraca(std::string nomeBarraca)
 {
     return mockBarraca;
 } 
 
 bool mockCliente;
-bool buscaConfirmCliente(int cpf)
+bool buscaConfirmCliente(long long cpf)
 {
     return mockCliente;
 }

@@ -171,7 +171,7 @@ Acoplamentos:
 
 --> Retornos:
     - 0: Busca realizada com sucesso.
-    - 1: Barraca não está confirmada (`buscaConfirmBarraca` retorna erro).
+    - 1: Barraca não está confirmada (`buscaConfirmaBarraca` retorna erro).
 
 Condições de acoplamento:
 

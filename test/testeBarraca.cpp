@@ -4,6 +4,7 @@
  */
 
 #define DOCTEST_CONFIG_IMPLEMENT
+#define TESTE_ON
 #include "doctest.h"
 #include "barraca.h"
 #include "testeBarraca.h"
@@ -11,6 +12,11 @@
 int buscaProduto(std::string id, AuxProduto& auxProduto){
     auxProduto.id = 9;
     auxProduto.nome = "coca";
+    return 0;
+}
+
+int criaEstoque (std::string nomeBarraca)
+{
     return 0;
 }
 

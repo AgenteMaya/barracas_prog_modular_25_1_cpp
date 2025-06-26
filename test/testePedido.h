@@ -9,6 +9,6 @@ struct AuxEstoque
 };
 
 int confereNoEstoque(AuxEstoque& infoEstoque);
-bool buscaConfirmCliente(int cpf);
+bool buscaConfirmCliente(long long  cpf);
 int editarQuantidadeProduto(AuxEstoque infoEstoque);
-int buscaConfirmBarraca(std::string nomeBarraca);
+int buscaConfirmaBarraca(std::string nomeBarraca);

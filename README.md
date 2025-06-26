@@ -17,3 +17,6 @@ Exemplo:
 
         ./testesEstoque --sucess
 
+        g++ -Wall -o testesCliente -Isrc -Itest test/testeCliente.cpp src/cliente.cpp
+
+        ./testesCliente --sucess
